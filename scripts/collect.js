@@ -169,7 +169,7 @@ async function clickPokemon(page, pokemonName) {
     if (!found) return false;
   }
 
-  await page.waitForTimeout(1500);
+  await new Promise(r => setTimeout(r, 1500));
   return true;
 }
 
@@ -278,7 +278,7 @@ async function main() {
   // Pikalytics 홈 로드 (포켓몬챔피언스 기본값)
   console.log('📥 https://www.pikalytics.com 로드 중...');
   await page.goto('https://www.pikalytics.com', { waitUntil: 'networkidle2', timeout: 40000 });
-  await page.waitForTimeout(2000);
+  await new Promise(r => setTimeout(r, 2000));
 
   // Champions Reg M-B 탭 선택 확인
   const regMB = await page.evaluate(() => {
@@ -349,7 +349,7 @@ async function main() {
       await saveToFirestore(db, pokemon.name, pokemon.rank, scraped);
       stats.success++;
 
-      await page.waitForTimeout(1000); // 요청 간격
+      await new Promise(r => setTimeout(r, 1000)); // 요청 간격
 
     } catch (err) {
       console.error(`  ❌ ${err.message}`);
