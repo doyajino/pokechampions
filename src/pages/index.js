@@ -191,18 +191,52 @@ export async function renderPokemonDetailPage(params) {
 
     <!-- 탭 콘텐츠 -->
     <div id="tab-content">
-      <!-- 노력치 분배 탭 (기본 표시) -->
+
+      <!-- 0: 노력치 분배 -->
       <div data-tab-panel="0">
         <div style="margin-bottom:16px;">
-          <h2 style="font-family:var(--font-display); font-size:1.1rem; margin-bottom:4px;">
-            추천 노력치 분배
-          </h2>
-          <p style="font-size:0.8rem; color:var(--color-text-muted);">
-            포켓몬챔피언스 기준 스탯포인트 · 출처: Pikalytics
-          </p>
+          <h2 style="font-family:var(--font-display); font-size:1.1rem; margin-bottom:4px;">추천 노력치 분배</h2>
+          <p style="font-size:0.8rem; color:var(--color-text-muted);">포켓몬챔피언스 기준 스탯포인트 · 출처: Pikalytics</p>
         </div>
         ${renderStatPointSpreads(spreads)}
       </div>
+
+      <!-- 1: 추천 기술 -->
+      <div data-tab-panel="1">
+        <h2 style="font-family:var(--font-display); font-size:1.1rem; margin-bottom:16px;">추천 기술</h2>
+        ${renderMoveList(pokemon.moves)}
+      </div>
+
+      <!-- 2: 추천 특성 -->
+      <div data-tab-panel="2">
+        <h2 style="font-family:var(--font-display); font-size:1.1rem; margin-bottom:16px;">추천 특성</h2>
+        ${renderAbilityList(pokemon.abilities)}
+      </div>
+
+      <!-- 3: 추천 아이템 -->
+      <div data-tab-panel="3">
+        <h2 style="font-family:var(--font-display); font-size:1.1rem; margin-bottom:16px;">추천 아이템</h2>
+        ${renderItemList(pokemon.items)}
+      </div>
+
+      <!-- 4: 운용 방식 -->
+      <div data-tab-panel="4">
+        <h2 style="font-family:var(--font-display); font-size:1.1rem; margin-bottom:16px;">추천 운용 방식</h2>
+        ${renderUsageStyle(pokemon)}
+      </div>
+
+      <!-- 5: 파트너 -->
+      <div data-tab-panel="5">
+        <h2 style="font-family:var(--font-display); font-size:1.1rem; margin-bottom:16px;">추천 파트너</h2>
+        ${renderPartners(pokemon.partners)}
+      </div>
+
+      <!-- 6: 카운터 -->
+      <div data-tab-panel="6">
+        <h2 style="font-family:var(--font-display); font-size:1.1rem; margin-bottom:16px;">카운터 포켓몬</h2>
+        ${renderCounters(pokemon.counters)}
+      </div>
+
     </div>
   `;
 }
@@ -210,6 +244,155 @@ export async function renderPokemonDetailPage(params) {
 function getOfficialArt(pokemon) {
   const id = pokemon.nationalDex || pokemon.id;
   return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
+}
+
+// ========================
+// 탭별 렌더 함수
+// ========================
+
+function emptyState(msg) {
+  return `<div class="empty-state"><div class="empty-icon">📭</div><p>${msg}</p></div>`;
+}
+
+function renderMoveList(moves = []) {
+  if (!moves?.length) return emptyState('추천 기술 데이터가 없습니다.');
+  return `
+    <div style="display:flex; flex-direction:column; gap:8px;">
+      ${moves.map((m, i) => {
+        const name = typeof m === 'string' ? m : m.name;
+        const usage = typeof m === 'object' && m.usage ? m.usage.toFixed(1) + '%' : '';
+        return `
+          <div class="card" style="display:flex; align-items:center; justify-content:space-between; padding:12px 16px;">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <span style="font-family:var(--font-display); font-size:1.1rem; color:var(--color-text-muted); min-width:24px;">${i+1}</span>
+              <span style="font-weight:600;">${name}</span>
+            </div>
+            ${usage ? `<span style="color:var(--color-accent-blue); font-family:var(--font-display);">${usage}</span>` : ''}
+          </div>`;
+      }).join('')}
+    </div>`;
+}
+
+function renderAbilityList(abilities = []) {
+  if (!abilities?.length) return emptyState('추천 특성 데이터가 없습니다.');
+  return `
+    <div style="display:flex; flex-direction:column; gap:8px;">
+      ${abilities.map((a, i) => {
+        const name = typeof a === 'string' ? a : a.name;
+        const usage = typeof a === 'object' && a.usage ? a.usage.toFixed(1) + '%' : '';
+        return `
+          <div class="card" style="display:flex; align-items:center; justify-content:space-between; padding:12px 16px;">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <span style="font-family:var(--font-display); font-size:1.1rem; color:var(--color-text-muted); min-width:24px;">${i+1}</span>
+              <span style="font-weight:600;">${name}</span>
+            </div>
+            ${usage ? `<span style="color:var(--color-accent-blue); font-family:var(--font-display);">${usage}</span>` : ''}
+          </div>`;
+      }).join('')}
+    </div>`;
+}
+
+function renderItemList(items = []) {
+  if (!items?.length) return emptyState('추천 아이템 데이터가 없습니다.');
+  return `
+    <div style="display:flex; flex-direction:column; gap:8px;">
+      ${items.map((item, i) => {
+        const name = typeof item === 'string' ? item : item.name;
+        const usage = typeof item === 'object' && item.usage ? item.usage.toFixed(1) + '%' : '';
+        return `
+          <div class="card" style="display:flex; align-items:center; justify-content:space-between; padding:12px 16px;">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <span style="font-family:var(--font-display); font-size:1.1rem; color:var(--color-text-muted); min-width:24px;">${i+1}</span>
+              <span style="font-weight:600;">${name}</span>
+            </div>
+            ${usage ? `<span style="color:var(--color-accent-blue); font-family:var(--font-display);">${usage}</span>` : ''}
+          </div>`;
+      }).join('')}
+    </div>`;
+}
+
+function renderUsageStyle(pokemon) {
+  const topMove = pokemon.moves?.[0];
+  const topAbility = pokemon.abilities?.[0];
+  const topItem = pokemon.items?.[0];
+  const topNature = pokemon.natures?.[0] || pokemon.recommendedStatPointSpreads?.[0];
+
+  if (!topMove && !topAbility && !topItem) return emptyState('운용 방식 데이터가 없습니다.');
+
+  const nature = topNature?.nature || '-';
+  const moveName = typeof topMove === 'string' ? topMove : topMove?.name || '-';
+  const abilName = typeof topAbility === 'string' ? topAbility : topAbility?.name || '-';
+  const itemName = typeof topItem === 'string' ? topItem : topItem?.name || '-';
+
+  return `
+    <div class="card" style="margin-bottom:16px;">
+      <div class="card-title">주요 운용 방식</div>
+      <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:16px; margin-top:8px;">
+        <div>
+          <div style="font-size:0.75rem; color:var(--color-text-muted); margin-bottom:4px;">성격</div>
+          <div style="font-weight:600;">${nature}</div>
+        </div>
+        <div>
+          <div style="font-size:0.75rem; color:var(--color-text-muted); margin-bottom:4px;">주요 특성</div>
+          <div style="font-weight:600;">${abilName}</div>
+        </div>
+        <div>
+          <div style="font-size:0.75rem; color:var(--color-text-muted); margin-bottom:4px;">주요 아이템</div>
+          <div style="font-weight:600;">${itemName}</div>
+        </div>
+        <div>
+          <div style="font-size:0.75rem; color:var(--color-text-muted); margin-bottom:4px;">주요 기술</div>
+          <div style="font-weight:600;">${moveName}</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">추천 기술 구성</div>
+      <div style="margin-top:8px;">
+        ${(pokemon.moves || []).slice(0, 4).map(m => {
+          const name = typeof m === 'string' ? m : m.name;
+          return `<span style="display:inline-block; background:var(--color-bg-elevated); border-radius:4px; padding:4px 12px; margin:3px; font-size:0.875rem;">${name}</span>`;
+        }).join('')}
+      </div>
+    </div>`;
+}
+
+function renderPartners(partners = []) {
+  if (!partners?.length) return emptyState('파트너 데이터가 없습니다.');
+  return `
+    <div style="display:flex; flex-wrap:wrap; gap:12px;">
+      ${partners.map((p, i) => {
+        const name = typeof p === 'string' ? p : p.name;
+        const rank = typeof p === 'object' ? p.rank : null;
+        const slug = name.toLowerCase().replace(/[^a-z0-9]/g, '');
+        return `
+          <div class="card" style="text-align:center; min-width:100px; padding:12px; cursor:default;">
+            <img src="https://cdn.pikalytics.com/images/championssprites/${slug}.png" alt="${name}"
+              style="width:60px; height:60px; object-fit:contain; margin:0 auto 8px; image-rendering:pixelated;"
+              onerror="this.style.opacity='0.3'">
+            <div style="font-size:0.85rem; font-weight:600;">${name}</div>
+            ${rank ? `<div style="font-size:0.75rem; color:var(--color-text-muted);">#${rank}</div>` : ''}
+          </div>`;
+      }).join('')}
+    </div>`;
+}
+
+function renderCounters(counters = []) {
+  if (!counters?.length) return emptyState('카운터 데이터가 없습니다.<br><small>추후 업데이트 예정</small>');
+  return `
+    <div style="display:flex; flex-wrap:wrap; gap:12px;">
+      ${counters.map(c => {
+        const name = typeof c === 'string' ? c : c.name;
+        const slug = name.toLowerCase().replace(/[^a-z0-9]/g, '');
+        return `
+          <div class="card" style="text-align:center; min-width:100px; padding:12px;">
+            <img src="https://cdn.pikalytics.com/images/championssprites/${slug}.png" alt="${name}"
+              style="width:60px; height:60px; object-fit:contain; margin:0 auto 8px; image-rendering:pixelated;"
+              onerror="this.style.opacity='0.3'">
+            <div style="font-size:0.85rem; font-weight:600;">${name}</div>
+          </div>`;
+      }).join('')}
+    </div>`;
 }
 
 // ========================
