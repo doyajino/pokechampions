@@ -1,0 +1,36 @@
+name: Pikalytics 데이터 자동수집
+
+on:
+  schedule:
+      - cron: '0 18 * * *'
+        workflow_dispatch:
+
+        jobs:
+          collect:
+              runs-on: ubuntu-latest
+
+                  steps:
+                        - name: 저장소 체크아웃
+                                uses: actions/checkout@v4
+
+                                      - name: Node.js 설정
+                                              uses: actions/setup-node@v4
+                                                      with:
+                                                                node-version: '20'
+
+                                                                      - name: 의존성 설치
+                                                                              run: |
+                                                                                        cd scripts
+                                                                                                  npm install
+
+                                                                                                        - name: Pikalytics 데이터 수집
+                                                                                                                env:
+                                                                                                                          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+                                                                                                                                    FIREBASE_CLIENT_EMAIL: ${{ secrets.FIREBASE_CLIENT_EMAIL }}
+                                                                                                                                              FIREBASE_PRIVATE_KEY: ${{ secrets.FIREBASE_PRIVATE_KEY }}
+                                                                                                                                                      run: |
+                                                                                                                                                                cd scripts
+                                                                                                                                                                          node collect.js
+                                                                                                                                                                          
+                                                                                                                                                                                - name: 수집 완료
+                                                                                                                                                                                        run: echo 'done'
