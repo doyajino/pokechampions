@@ -1,0 +1,14 @@
+{
+  "name": "pokechampions-collector",
+  "version": "1.0.0",
+  "description": "Pikalytics 자동수집 스크립트",
+  "main": "collect.js",
+  "scripts": {
+    "collect": "node collect.js",
+    "test": "node collect.js --dry-run"
+  },
+  "dependencies": {
+    "puppeteer": "^22.0.0",
+    "firebase-admin": "^12.0.0"
+  }
+}
