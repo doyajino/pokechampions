@@ -1,18 +1,16 @@
 // src/firebase.js
-// Firebase 설정 - 실제 배포 전 본인 프로젝트 설정으로 교체하세요.
-// Firebase Console > 프로젝트 설정 > 앱 추가 > 웹
-
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
 import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 import { getAuth } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
 
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyC_dUT5zu19BstgZy8pH4Lj7psOSyx41lM",
+  authDomain: "pokechampions-86482.firebaseapp.com",
+  projectId: "pokechampions-86482",
+  storageBucket: "pokechampions-86482.firebasestorage.app",
+  messagingSenderId: "624226354474",
+  appId: "1:624226354474:web:eca1d3a35272ee41af0a53",
+  measurementId: "G-8NLJFDSHKB"
 };
 
 const app = initializeApp(firebaseConfig);
